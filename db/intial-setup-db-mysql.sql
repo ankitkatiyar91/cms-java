@@ -436,7 +436,7 @@ CREATE TABLE IF NOT EXISTS `user_` (
 DELETE FROM `user_`;
 /*!40000 ALTER TABLE `user_` DISABLE KEYS */;
 INSERT INTO `user_` (`user_id`, `active`, `admin`, `agreedToTermsOfUse`, `city`, `contactNo`, `country`, `created`, `dob`, `email`, `emailAddressVerified`, `facebookId`, `failedLoginAttempts`, `firstName`, `gender`, `jobTitle`, `lastFailedLoginDate`, `lastName`, `lastUpdated`, `loginDate`, `loginIP`, `middleName`, `mobileNo`, `password_`, `passwordEncrypted`, `passwordModifiedDate`, `reminderQueryAnswer`, `reminderQueryQuestion`, `screenName`, `street`) VALUES
-	(1, b'1', b'1', b'1', NULL, NULL, NULL, '2014-06-05 00:00:00', '2014-06-01', 'admin@cms.com', b'1', 'ankitkatiyar91', 0, 'Ankit', 'MALE', NULL, '2018-02-03 23:20:42', 'Katiyar', '2018-02-03 23:20:44', '2018-02-03 23:20:44', '0:0:0:0:0:0:0:1', NULL, NULL, 'ankit', b'0', NULL, NULL, NULL, NULL, NULL);
+	(1, b'1', b'1', b'1', NULL, NULL, NULL, '2014-06-05 00:00:00', '2014-06-01', 'admin@cms.com', b'1', 'ankitkatiyar91', 0, 'Ankit', 'MALE', NULL, '2018-02-04 00:42:23', 'Katiyar', '2018-02-04 00:42:28', '2018-02-04 00:42:28', '0:0:0:0:0:0:0:1', NULL, NULL, 'admin', b'0', NULL, NULL, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `user_` ENABLE KEYS */;
 
 -- Dumping structure for table cms.user_group
