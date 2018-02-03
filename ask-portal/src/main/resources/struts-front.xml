@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="front" extends="struts-default,json-default"
+		namespace="/">
+		<result-types>
+			<result-type name="imageResult"
+				class="com.ankit.portal.custom.result.ImageResult"></result-type>
+		</result-types>
+		<action name="">
+			<result>/front/index.jsp</result>
+		</action>
+		<action name="cpanel">
+			<result name="*" type="redirect">/cpanel/home</result>
+		</action>
+		<action name="login">
+			<result>/front/index.jsp</result>
+		</action>
+		<action name="home" class="com.ankit.portal.web.action.front.HomeAction"
+			method="render">
+			<result name="success">/front/article.jsp</result>
+		</action>
+
+		<action name="preview" class="com.ankit.portal.web.action.front.HomeAction"
+			method="previewRender">
+			<result name="success">/front/preview.jsp</result>
+		</action>
+
+		<action name="image" class="com.ankit.portal.web.action.ImageAction"
+			method="content">
+			<result type="imageResult"></result>
+		</action>
+
+		<action name="imageThumb" class="com.ankit.portal.web.action.ImageAction"
+			method="thumb">
+			<result type="imageResult"></result>
+		</action>
+	</package>
+	<!-- To make /web/image actions working, to avoid mistakes made in content -->
+	<package name="web" extends="struts-default,json-default"
+		namespace="/web">
+		<result-types>
+			<result-type name="imageResult"
+				class="com.ankit.portal.custom.result.ImageResult"></result-type>
+		</result-types>
+		<action name="image" class="com.ankit.portal.web.action.ImageAction"
+			method="content">
+			<result type="imageResult"></result>
+		</action>
+	</package>
+</struts>

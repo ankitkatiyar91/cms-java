@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.custom.i18n.resources" value="messages.properties" />
+	<package name="control-panel" extends="struts-default,json-default"
+		namespace="/cpanel">
+		<interceptors>
+			<interceptor-stack name="adminStack">
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="chain" />
+				<interceptor-ref name="scopedModelDriven" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="multiselect" />
+				<interceptor-ref name="staticParams" />
+				<interceptor-ref name="actionMappingParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*</param>
+				</interceptor-ref>
+				<interceptor-ref name="conversionError" />
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">input,back,cancel,browse</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">input,back,cancel,browse</param>
+				</interceptor-ref>
+				<interceptor-ref name="debugging" />
+				<interceptor-ref name="timer" />
+			</interceptor-stack>
+		</interceptors>
+		<!-- Global mappings -->
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+		</global-exception-mappings>
+
+		<!-- Action mapping -->
+		<action name="login">
+			<result name="*">/control-panel/login.jsp</result>
+		</action>
+		<action name="home">
+			<result>/control-panel/index.jsp</result>
+		</action>
+		<action name="">
+			<result>/control-panel/index.jsp</result>
+		</action>
+
+
+		<action name="loginAction"
+			class="com.ankit.portal.web.action.cpanel.UserLoginAction" method="login">
+			<result name="input">/control-panel/login.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">home</param>
+				<param name="suppressEmptyParameters">true</param>
+			</result>
+		</action>
+		<!-- Roles mapping start -->
+		<action name="roles">
+			<result name="*">/control-panel/role/roles.jsp</result>
+		</action>
+		<action name="listRoles" class="com.ankit.portal.web.action.cpanel.RoleAction"
+			method="listRoles">
+			<result name="success" type="json">
+				<param name="root">rolesJson</param>
+			</result>
+		</action>
+		<action name="addRole" class="com.ankit.portal.web.action.cpanel.RoleAction"
+			method="addRole">
+			<result name="*" type="json">
+				<param name="root">rolesJson</param>
+			</result>
+		</action>
+		<action name="updateRole" class="com.ankit.portal.web.action.cpanel.RoleAction"
+			method="updateRole">
+			<result name="*" type="json">
+				<param name="root">rolesJson</param>
+			</result>
+		</action>
+		<action name="deleteRole" class="com.ankit.portal.web.action.cpanel.RoleAction"
+			method="deleteRole">
+			<result name="*" type="json">
+				<param name="root">rolesJson</param>
+			</result>
+		</action>
+		<action name="showRoleAssignPermission" class="com.ankit.portal.web.action.cpanel.RoleAction"
+			method="showRole">
+			<result name="*">/control-panel/role/roles-assignpermissions.jsp
+			</result>
+		</action>
+		<action name="assignRolePermissions" class="com.ankit.portal.web.action.cpanel.RoleAction"
+			method="assignPermissions">
+			<result name="*" type="json">
+				<param name="root">rolesJson</param>
+			</result>
+		</action>
+		<!-- Role option mapping -->
+		<action name="roleOptions" class="com.ankit.portal.web.action.cpanel.RoleAction"
+			method="getRoleOptions">
+			<result name="*" type="json">
+				<param name="root">rolesJson</param>
+			</result>
+		</action>
+		<!-- user actions start -->
+		<action name="users">
+			<result name="*">/control-panel/user/userlist.jsp</result>
+		</action>
+		<action name="listUsers"
+			class="com.ankit.portal.web.action.cpanel.UserListAction" method="list">
+			<result name="*" type="json">
+				<param name="root">usersJsonObject</param>
+			</result>
+		</action>
+		<action name="userAddForm">
+			<result name="*">/control-panel/user/user-addnew.jsp</result>
+		</action>
+		<action name="userAddNew" class="com.ankit.portal.web.action.cpanel.UserAction"
+			method="addNew">
+			<result name="success" type="redirectAction">userDetail?userId=${user.id}
+			</result>
+			<result name="input">/control-panel/user/user-addnew.jsp</result>
+		</action>
+		<action name="userDetail"
+			class="com.ankit.portal.web.action.cpanel.UserListAction" method="viewDetail">
+			<result name="*">/control-panel/user/user-viewDetails.jsp</result>
+		</action>
+		<action name="userChangeStatus"
+			class="com.ankit.portal.web.action.cpanel.UserListAction" method="changeStatus">
+			<result name="*" type="redirectAction">userDetail?userId=${user.id}</result>
+		</action>
+		<action name="userAssignRoleForm"
+			class="com.ankit.portal.web.action.cpanel.UserAssignAction" method="assignRoleForm">
+			<result name="*">/control-panel/user/user-assignroles.jsp</result>
+		</action>
+		<action name="userAssignRole"
+			class="com.ankit.portal.web.action.cpanel.UserAssignAction" method="assignRole">
+			<result name="*" type="redirectAction">userAssignRoleForm?user.id=${user.id}
+			</result>
+		</action>
+		<action name="userAssignGroupForm"
+			class="com.ankit.portal.web.action.cpanel.UserAssignAction" method="assignGroupForm">
+			<result name="*">/control-panel/user/user-assigngroups.jsp
+			</result>
+		</action>
+		<action name="userResetPasswordForm"
+			class="com.ankit.portal.web.action.cpanel.UserResetPassword" method="resetForm">
+			<result name="*">/control-panel/user/user-resetpassword.jsp
+			</result>
+		</action>
+		<action name="userResetPassword"
+			class="com.ankit.portal.web.action.cpanel.UserResetPassword" method="resetPassword">
+			<result name="*">/control-panel/user/user-resetpassword.jsp
+			</result>
+		</action>
+		<action name="userAssignGroup"
+			class="com.ankit.portal.web.action.cpanel.UserAssignAction" method="assignGroup">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<!-- user actions start -->
+		<!-- group action mapping start -->
+		<action name="userGroups">
+			<result name="*">/control-panel/group/usergroups.jsp</result>
+		</action>
+		<action name="userGroupList"
+			class="com.ankit.portal.web.action.cpanel.UserGroupAction" method="listUserGroups">
+			<result name="*" type="json">
+				<param name="root">userGroupJson</param>
+			</result>
+		</action>
+		<action name="userGroupAdd"
+			class="com.ankit.portal.web.action.cpanel.UserGroupAction" method="addUserGroups">
+			<result name="*" type="json">
+				<param name="root">userGroupJson</param>
+			</result>
+		</action>
+		<action name="userGroupUpdate"
+			class="com.ankit.portal.web.action.cpanel.UserGroupAction" method="updateUserGroups">
+			<result name="*" type="json">
+				<param name="root">userGroupJson</param>
+			</result>
+		</action>
+		<action name="userGroupDetail"
+			class="com.ankit.portal.web.action.cpanel.UserGroupDetailsAction"
+			method="showDetails">
+			<result name="*">/control-panel/group/usergroup-details.jsp
+			</result>
+		</action>
+		<action name="userGroupDetail_ListUsers"
+			class="com.ankit.portal.web.action.cpanel.UserGroupDetailsAction"
+			method="getUsers">
+			<result name="*" type="json">
+				<param name="root">userGroupJson</param>
+			</result>
+		</action>
+		<action name="userGroupDetail_ListRoles"
+			class="com.ankit.portal.web.action.cpanel.UserGroupDetailsAction"
+			method="getRoles">
+			<result name="*" type="json">
+				<param name="root">userGroupJson</param>
+			</result>
+		</action>
+		<action name="userGroupDetail_AddRole"
+			class="com.ankit.portal.web.action.cpanel.UserGroupDetailsAction"
+			method="assignRole">
+			<result name="*" type="json">
+				<param name="root">userGroupJson</param>
+			</result>
+		</action>
+		<action name="userGroupDetail_RemoveRole"
+			class="com.ankit.portal.web.action.cpanel.UserGroupDetailsAction"
+			method="removeRole">
+			<result name="*" type="redirectAction">userGroupDetail?group.id=${group.id}
+			</result>
+		</action>
+		<action name="userGroupDelete"
+			class="com.ankit.portal.web.action.cpanel.UserGroupAction" method="delete">
+			<result name="*" type="json">
+				<param name="root">userGroupJson</param>
+			</result>
+		</action>
+		<!-- Group action mapping end -->
+		<!-- Menu action mapping start -->
+		<action name="menus">
+			<result name="*">/control-panel/menu/menu-list.jsp</result>
+		</action>
+		<action name="menuList" class="com.ankit.portal.web.action.cpanel.MenusAction"
+			method="list">
+			<result name="*" type="json">
+				<param name="root">menuJsonObject</param>
+			</result>
+		</action>
+		<action name="menuAddForm" class="com.ankit.portal.web.action.cpanel.MenusAction"
+			method="showAddForm">
+			<result name="*">/control-panel/menu/menu-add.jsp</result>
+		</action>
+		<action name="menuAddNew" class="com.ankit.portal.web.action.cpanel.MenusAction"
+			method="add">
+			<result name="success" type="redirectAction">menuViewDetails?menu.id=${menu.id}
+			</result>
+			<result name="*">/control-panel/menu/menu-add.jsp</result>
+		</action>
+		<action name="menuViewDetails" class="com.ankit.portal.web.action.cpanel.MenusAction"
+			method="viewDetails">
+			<result name="*">/control-panel/menu/menu-details.jsp</result>
+		</action>
+		<action name="menuMoveUp" class="com.ankit.portal.web.action.cpanel.MenusAction"
+			method="moveUp">
+			<result name="*" type="json">
+				<param name="root">menuJsonObject</param>
+			</result>
+		</action>
+		<action name="menuMoveDown" class="com.ankit.portal.web.action.cpanel.MenusAction"
+			method="moveDown">
+			<result name="*" type="json">
+				<param name="root">menuJsonObject</param>
+			</result>
+		</action>
+		<action name="menuUpdateStatus" class="com.ankit.portal.web.action.cpanel.MenusAction"
+			method="updateStatus">
+			<result name="*" type="redirectAction">menuViewDetails?menu.id=${menu.id}
+			</result>
+		</action>
+		<action name="menuUpdate" class="com.ankit.portal.web.action.cpanel.MenusAction"
+			method="update">
+			<result name="*" type="json">
+				<param name="root">menuJsonObject</param>
+			</result>
+		</action>
+		<action name="menuLinkArticle"
+			class="com.ankit.portal.web.action.cpanel.MenuArticleLinkAction"
+			method="linkArticle">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<!-- menu action mapping end -->
+		<!-- category action mapping start -->
+		<action name="categories"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="addForm">
+			<result name="*">/control-panel/category/category-list.jsp
+			</result>
+		</action>
+		<action name="categoryAddForm"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="addForm">
+			<result name="*">/control-panel/category/category-add.jsp</result>
+		</action>
+		<action name="categoryAddNew"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="add">
+			<result name="input">/control-panel/category/category-add.jsp</result>
+			<result name="success" type="redirectAction">categoryDetails?category.id=${category.id}
+			</result>
+		</action>
+		<action name="categoryDetails"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="viewDetails">
+			<result name="*">/control-panel/category/category-details.jsp
+			</result>
+		</action>
+		<action name="categoryUpdateStatus"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="updateStatus">
+			<result name="success" type="redirectAction">categoryDetails?category.id=${category.id}
+			</result>
+		</action>
+		<action name="categoryList"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="list">
+			<result name="*" type="json">
+				<param name="root">categoryJson</param>
+			</result>
+		</action>
+		<action name="categoryMoveUp"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="moveUp">
+			<result name="*" type="json">
+				<param name="root">categoryJson</param>
+			</result>
+		</action>
+		<action name="categoryMoveDown"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="moveDown">
+			<result name="*" type="json">
+				<param name="root">categoryJson</param>
+			</result>
+		</action>
+		<action name="categoryUpdate"
+			class="com.ankit.portal.web.action.cpanel.CategoryAction" method="update">
+			<result name="*" type="json">
+				<param name="root">categoryJson</param>
+			</result>
+		</action>
+		<action name="categoryLinkArticle"
+			class="com.ankit.portal.web.action.cpanel.CategoryArticleLinkAction"
+			method="linkArticle">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<!-- category action mapping end -->
+		<!-- sub category action mapping start -->
+		<action name="subCategories"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="showListPage">
+			<result name="*">/control-panel/sub-category/sub-category-list.jsp
+			</result>
+		</action>
+		<action name="subCategoryList"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="listSubCategories">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<action name="subCategoryAddForm"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="showListPage">
+			<result name="*">/control-panel/sub-category/sub-category-add.jsp
+			</result>
+		</action>
+		<action name="subCategoryAddNew"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="add">
+			<result name="input">/control-panel/sub-category/sub-category-add.jsp
+			</result>
+			<result name="success" type="redirectAction">subCategoryDetails?subCategory.id=${subCategory.id}
+			</result>
+		</action>
+		<action name="subCategoryDetails"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="viewDetails">
+			<result name="*">/control-panel/sub-category/sub-category-details.jsp
+			</result>
+		</action>
+		<action name="subCategoryUpdateStatus"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="updateStatus">
+			<result name="success" type="redirectAction">subCategoryDetails?subCategory.id=${subCategory.id}
+			</result>
+		</action>
+		<action name="subCategoryMoveUp"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="moveUp">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<action name="subCategoryMoveDown"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="moveDown">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<action name="subCategoryUpdate"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="update">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<action name="subCategoryDelete"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryAction" method="delete">
+			<result name="success" type="redirectAction">subCategories</result>
+		</action>
+		<action name="subCategoryLinkArticle"
+			class="com.ankit.portal.web.action.cpanel.SubCategoryArticleLinkAction"
+			method="linkArticle">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<!-- Article action mapping start -->
+		<action name="articles">
+			<result name="*">/control-panel/article/list.jsp</result>
+		</action>
+		<action name="articleList" class="com.ankit.portal.web.action.cpanel.ArticleAction"
+			method="list">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<action name="articleContent" class="com.ankit.portal.web.action.cpanel.ArticleAction"
+			method="editForm">
+			<result name="*">/control-panel/article/content.jsp</result>
+		</action>
+		<action name="articleSave" class="com.ankit.portal.web.action.cpanel.ArticleAction"
+			method="save">
+			<result name="*" type="json">
+				<param name="root">jsonObject</param>
+			</result>
+		</action>
+		<action name="articlePublish" class="com.ankit.portal.web.action.cpanel.ArticleAction"
+			method="publish">
+			<result name="*" type="redirectAction">articleContent?articleId=${article.articleId}
+			</result>
+		</action>
+		<action name="articleDelete" class="com.ankit.portal.web.action.cpanel.ArticleAction"
+			method="delete">
+			<result name="*" type="redirectAction">articles?articleId=${article.articleId}
+			</result>
+		</action>
+		<!-- Article action mapping end -->
+		<!-- Images action -->
+		<action name="images"
+			class="com.ankit.portal.web.action.cpanel.ImageListAction" method="list">
+			<result name="*">/control-panel/image/image-list.jsp</result>
+		</action>
+		<action name="imagesUploadFrom">
+			<result name="*">/control-panel/image/upload.jsp</result>
+		</action>
+		<action name="imagesUpload"
+			class="com.ankit.portal.web.action.cpanel.ImageUploadAction" method="upload">
+			<interceptor-ref name="fileUpload">
+				<param name="maximumSize">2097152</param>
+				<param name="allowedTypes">
+					image/png,image/gif,image/jpeg,image/pjpeg
+				</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="*" type="redirectAction">imagesUploadFrom?id=${id}</result>
+		</action>
+		<!-- Images Action end -->
+		<!-- Common action -->
+		<action name="clearCache" class="com.ankit.portal.web.action.cpanel.CacheAction"
+			method="clearCache">
+			<result name="*" type="redirectAction">home</result>
+		</action>
+		<action name="rebuildIndex"
+			class="com.ankit.portal.web.action.cpanel.SearchIndexAction" method="rebuildSearchIndex">
+			<result name="*" type="redirectAction">home</result>
+		</action>
+		<!-- Common Action end -->
+	</package>
+</struts>

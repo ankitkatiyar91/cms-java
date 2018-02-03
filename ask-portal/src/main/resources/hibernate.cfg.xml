@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		
+		<!-- Connection pool setting -->
+		<property name="hibernate.c3p0.min_size">2</property>
+		<property name="hibernate.c3p0.max_size">5</property>
+		<property name="hibernate.c3p0.timeout">1000</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.idle_test_period">3000</property>
+		<!-- Second level cache -->
+		<property name="hibernate.cache.use_query_cache">true</property>
+		<property name="hibernate.cache.use_second_level_cache">true</property>
+		<property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</property>
+		<property name="hibernate.generate_statistics">true</property>
+		<!-- Lucene Search -->
+		<!-- 
+		<property name="hibernate.search.default.directory_provider">filesystem</property>
+		<property name="hibernate.search.default.indexBase">/home/orajpo/public_html/web/index/</property>
+		 -->
+		<!-- Resource mapping -->
+		<mapping class="com.ankit.portal.service.domain.Menu" />
+		<mapping class="com.ankit.portal.service.domain.Category" />
+		<mapping class="com.ankit.portal.service.domain.SubCategory" />
+		<mapping class="com.ankit.portal.service.domain.Article" />
+		<mapping class="com.ankit.portal.service.domain.User" />
+		<mapping class="com.ankit.portal.service.domain.Reference" />
+		<mapping class="com.ankit.portal.service.domain.UserGroup" />
+		<mapping class="com.ankit.portal.service.domain.Permission" />
+		<mapping class="com.ankit.portal.service.domain.Role" />
+		<mapping class="com.ankit.portal.service.domain.Tag" />
+		<mapping class="com.ankit.portal.service.domain.Notification" />
+		<mapping class="com.ankit.portal.service.domain.AdminMessage" />
+		<mapping class="com.ankit.portal.service.domain.ForumQuestion" />
+		<mapping class="com.ankit.portal.service.domain.ForumAnswer" />
+		<mapping class="com.ankit.portal.service.domain.ImageFile" />
+	</session-factory>
+</hibernate-configuration>
