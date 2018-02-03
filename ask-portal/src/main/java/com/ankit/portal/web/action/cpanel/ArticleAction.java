@@ -48,8 +48,10 @@ public class ArticleAction extends PortalAction {
 	public String save() {
 		try {
 			System.out.println("ArticleAction.save() article->" + article);
-			System.out.println("Content->" + content + "  articleId->" + articleId + " title->" + title+" meta->"+meta);
-			LOGGER.log("ArticleAction.save() Content->" + content + "  articleId->" + articleId + " title->" + title+" meta->"+meta);
+			System.out.println(
+					"Content->" + content + "  articleId->" + articleId + " title->" + title + " meta->" + meta);
+			LOGGER.log("ArticleAction.save() Content->" + content + "  articleId->" + articleId + " title->" + title
+					+ " meta->" + meta);
 			jsonObject = new JSONObject();
 			final DateFormat dateFormat = new SimpleDateFormat(Util.DATE_TIME_FORMAT);
 			/*
@@ -69,17 +71,58 @@ public class ArticleAction extends PortalAction {
 					/*
 					 * Find if any changes made in Article
 					 */
-					if (!(article.getTitle().equals(title)
-							&& article.getContent().equals(content) && (article.getMeta()!=null && article.getMeta().equals(meta)))) {
+					if (!(article.getTitle().equals(title) && article.getContent().equals(content)
+							&& (article.getMeta() != null && article.getMeta().equals(meta)))) {
+
 						/*
-						 Check if Lastarticle wasPUBLISHED < br >Create a newversionVersioning issttoped as notrequired in thisAPP 30 - APR -2014if ( article .getStatus ( ) .equals (StatusType .PUBLISHED ) ) {double version =article .getVersion ( ) .intValue ( ) + 1; article .setStatus (StatusType . SAVE) ; article .setVersion (version ) ;article .setTitle ( title) ; article .setContent (content ) ;article .setCreatedBy (UserUtil .getUser (SubjectUtil .getCurrentUserId( ) ) ) ;ArticleUtil .addArticle (article ) ;System . out .println ("New article created because previous was updated") ; LOGGER . log("New article created because previous was updated") ; } else {Check if differetuser is editingthen create newversion < br > ORIf user makingchanges in an oldversion thencreate a newversionif ( article .getCreatedBy ( )!= null && ! (article .getCreatedBy ( ). getId ( ) .equals (SubjectUtil .getCurrentUserId( ) ) ) ) {double version =article .getVersion ( ) +0.1 ; article .setVersion (version ) ;article .setTitle ( title) ; article .setContent (content ) ;article .setCreatedBy (UserUtil .getUser (SubjectUtil .getCurrentUserId( ) ) ) ;ArticleUtil .addArticle (article ) ;System . out .println ("New added beacuse user was not same"+ version ) ;LOGGER . log ("New added beacuse user was not same"+ version ) ; }else {Same user makingchanges so keepit as it wasarticle .setTitle ( title) ; article .setContent (content ) ;ArticleUtil .updateArticle (article ) ;System . out .println ("Old updated " +article .getArticleId ( )) ; LOGGER . log( "Old updated "+ article .getArticleId ( )) ; }}
+						 * Check if Lastarticle wasPUBLISHED < br >Create a
+						 * newversionVersioning issttoped as notrequired in
+						 * thisAPP 30 - APR -2014
 						 */
+
+						if (article.getStatus().equals(StatusType.PUBLISHED)) {
+							double version = article.getVersion().intValue() + 1;
+							article.setStatus(StatusType.SAVE);
+							article.setVersion(version);
+							article.setTitle(title);
+							article.setContent(content);
+							article.setCreatedBy(UserUtil.getUser(SubjectUtil.getCurrentUserId()));
+							ArticleUtil.addArticle(article);
+							System.out.println("New article created because previous was updated");
+							LOGGER.log("New article created because previous was updated");
+						} else {
+							/*
+							 * Check if differetuser is editingthen create
+							 * newversion < br > ORIf user makingchanges in an
+							 * oldversion thencreate a newversion
+							 */
+							if (article.getCreatedBy() != null
+									&& !(article.getCreatedBy().getId().equals(SubjectUtil.getCurrentUserId()))) {
+								double version = article.getVersion() + 0.1;
+								article.setVersion(version);
+								article.setTitle(title);
+								article.setContent(content);
+								article.setCreatedBy(UserUtil.getUser(SubjectUtil.getCurrentUserId()));
+								ArticleUtil.addArticle(article);
+								System.out.println("New added beacuse user was not same" + version);
+								LOGGER.log("New added beacuse user was not same" + version);
+							} else {
+								/*
+								 * Same user makingchanges so keepit as it was
+								 */
+								article.setTitle(title);
+								article.setContent(content);
+								ArticleUtil.updateArticle(article);
+								System.out.println("Old updated " + article.getArticleId());
+								LOGGER.log("Old updated " + article.getArticleId());
+							}
+						}
+
 						article.setTitle(title);
 						article.setContent(content);
 						article.setMeta(meta);
 						ArticleUtil.updateArticle(article);
-						System.out.println("Old updated "
-								+ article.getArticleId());
+						System.out.println("Old updated " + article.getArticleId());
 						LOGGER.log("Old updated " + article.getArticleId());
 					}
 				} else {
@@ -114,8 +157,8 @@ public class ArticleAction extends PortalAction {
 			String searchQuery = getRequest().getParameter("searchQuery");
 			List<Article> articles;
 
-			System.out.println("\nArticleAction.list() uuid->" + uuid + "  jtPageSize->" + jtPageSize + " jtStartIndex->"
-					+ jtStartIndex + " status-" + status + " search" + searchQuery);
+			System.out.println("\nArticleAction.list() uuid->" + uuid + "  jtPageSize->" + jtPageSize
+					+ " jtStartIndex->" + jtStartIndex + " status-" + status + " search" + searchQuery);
 			LOGGER.log("ArticleAction.list() uuid->" + uuid + "  jtPageSize->" + jtPageSize + " jtStartIndex->"
 					+ jtStartIndex + " status-" + status + " search" + searchQuery);
 
@@ -131,7 +174,8 @@ public class ArticleAction extends PortalAction {
 				articles = ArticleUtil.getArticlesByUUID(uuid, jtStartIndex, jtPageSize);
 				jsonObject.put("TotalRecordCount", ArticleUtil.getTotalArticlesByUUID(uuid));
 			} else if (status != null || searchQuery != null) {
-				StatusType statusType = (status == null ? null : (status == 0 ? StatusType.SAVE : StatusType.PUBLISHED));
+				StatusType statusType = (status == null ? null
+						: (status == 0 ? StatusType.SAVE : StatusType.PUBLISHED));
 				articles = ArticleUtil.searchArticle(searchQuery, statusType, jtStartIndex, jtPageSize);
 				System.out.println("Total found article--" + articles.size());
 				jsonObject.put("TotalRecordCount", ArticleUtil.searchArticleCount(searchQuery, statusType));

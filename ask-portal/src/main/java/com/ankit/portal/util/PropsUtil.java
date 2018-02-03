@@ -3,13 +3,9 @@
  */
 package com.ankit.portal.util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Properties;
-
-import com.ankit.portal.web.listener.PortalContextListener;
 
 
 
@@ -29,11 +25,8 @@ public class PropsUtil {
 	public static void reloadProperties(){
 		try {
 			properties=new Properties();
-			if(new File(PropsUtil.class.getClass().getClassLoader().getResource("portal.properties").getRef()).exists()){
 				System.out.println("%%%%%%%%%%%%%%%%%%%%%loading---"+PropsUtil.class.getClass().getClassLoader().getResource("portal.properties").getFile());
-				properties.load(new FileInputStream(PropsUtil.class.getClass().getClassLoader().getResource("portal.properties").getRef()));
-			}
-			//properties.load(new FileInputStream(PortalContextListener.getRealPath()+"/../resources/portal.properties"));
+			properties.load(new FileInputStream("portal.properties"));
 			PASSWORD_ENCRYPTED=Boolean.parseBoolean(properties.getProperty("password.isencrypted"));
 		} catch (FileNotFoundException e) {
 	
